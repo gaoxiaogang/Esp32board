@@ -1,0 +1,80 @@
+dependencies:
+  78/esp-ml307:
+    component_hash: 26cac557d258a08b9138186d55b7db193823fe89c6c3cca8f2a9758c4aec1729
+    dependencies:
+    - name: idf
+      require: private
+      version: ^5.3
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.7.3
+  78/esp-opus:
+    component_hash: c8a448f5ebca4e97e43e93c02ebb3940ff484ad573cb3348f917a88af094b260
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com
+      type: service
+    version: 1.0.4
+  78/esp-opus-encoder:
+    component_hash: cef6f65e7cbe3ec97f3cb12b1fc028f330dee3d2b29c79764ea0a32ca0e73e06
+    dependencies:
+    - name: 78/esp-opus
+      registry_url: https://components.espressif.com
+      require: private
+      version: ^1.0.4
+    - name: idf
+      require: private
+      version: ^5.3
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 2.1.0
+  78/esp-wifi-connect:
+    component_hash: d929539449a555d8de3abc6b239301e899aacc2c06cfb2e66c1b00b04030d864
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.3'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 2.3.2
+  espressif/esp_lvgl_port:
+    component_hash: bb938deffba7d80b2ce582a796c053681b0439e0a7033666688e0f1f5b921125
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.4'
+    - name: lvgl/lvgl
+      registry_url: https://components.espressif.com
+      require: public
+      version: '>=8,<10'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 2.5.0
+  idf:
+    source:
+      type: idf
+    version: 5.3.2
+  lvgl/lvgl:
+    component_hash: 096c69af22eaf8a2b721e3913da91918c5e6bf1a762a113ec01f401aa61337a0
+    dependencies: []
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 9.2.2
+direct_dependencies:
+- 78/esp-ml307
+- 78/esp-opus-encoder
+- 78/esp-wifi-connect
+- espressif/esp_lvgl_port
+- idf
+- lvgl/lvgl
+manifest_hash: b109b5faba8c17db9115003e00f9395c649a1578c6ea96de2bf5239d07989d18
+target: esp32s3
+version: 2.0.0
