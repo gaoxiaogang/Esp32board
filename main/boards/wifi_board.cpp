@@ -32,6 +32,21 @@ WifiBoard::WifiBoard() {
     }
 }
 
+std::string WifiBoard::GetBoardJson() {
+    // Set the board type for OTA
+    auto& wifi_station = WifiStation::GetInstance();
+    std::string board_json = std::string("{\"type\":\"" BOARD_TYPE "\",");
+    board_json += "\"name\":\"" BOARD_NAME "\",";
+    if (!wifi_config_mode_) {
+        board_json += "\"ssid\":\"" + wifi_station.GetSsid() + "\",";
+        board_json += "\"rssi\":" + std::to_string(wifi_station.GetRssi()) + ",";
+        board_json += "\"channel\":" + std::to_string(wifi_station.GetChannel()) + ",";
+        board_json += "\"ip\":\"" + wifi_station.GetIpAddress() + "\",";
+    }
+    board_json += "\"mac\":\"" + SystemInfo::GetMacAddress() + "\"}";
+    return board_json;
+}
+
 std::string WifiBoard::GetBoardType() {
     return "wifi";
 }

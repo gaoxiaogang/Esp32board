@@ -1,5 +1,5 @@
 #include "application.h"
-#include "esp32_wifi_board.h"
+#include "board.h"
 #include "display.h"
 #include "system_info.h"
 
@@ -61,7 +61,7 @@ Application::~Application() {
 
 void Application::Alert(const char* status, const char* message, const char* emotion, const std::string_view& sound) {
     ESP_LOGW(TAG, "Alert %s: %s [%s]", status, message, emotion);
-    auto display = Esp32WifiBoard::GetInstance().GetDisplay();
+    auto display = Board::GetInstance().GetDisplay();
     display->SetStatus(status);
     display->SetEmotion(emotion);
     display->SetChatMessage("system", message);
@@ -72,7 +72,7 @@ void Application::Alert(const char* status, const char* message, const char* emo
 
 void Application::DismissAlert() {
     if (device_state_ == kDeviceStateIdle) {
-        auto display = Esp32WifiBoard::GetInstance().GetDisplay();
+        auto display = Board::GetInstance().GetDisplay();
         display->SetStatus(Lang::Strings::STANDBY);
         display->SetEmotion("neutral");
         display->SetChatMessage("system", "");
@@ -80,7 +80,7 @@ void Application::DismissAlert() {
 }
 
 void Application::PlaySound(const std::string_view& sound) {
-    auto codec = Esp32WifiBoard::GetInstance().GetAudioCodec();
+    auto codec = Board::GetInstance().GetAudioCodec();
     codec->EnableOutput(true);
     SetDecodeSampleRate(16000);
     const char* data = sound.data();

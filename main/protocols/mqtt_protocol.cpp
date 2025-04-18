@@ -1,5 +1,5 @@
 #include "mqtt_protocol.h"
-#include "esp32_wifi_board.h"
+#include "board.h"
 #include "application.h"
 #include "settings.h"
 
@@ -52,7 +52,7 @@ bool MqttProtocol::StartMqttClient(bool report_error) {
         return false;
     }
 
-    mqtt_ = Esp32WifiBoard::GetInstance().CreateMqtt();
+    mqtt_ = Board::GetInstance().CreateMqtt();
     mqtt_->SetKeepAlive(90);
 
     mqtt_->OnDisconnected([this]() {
@@ -188,7 +188,7 @@ bool MqttProtocol::OpenAudioChannel() {
     if (udp_ != nullptr) {
         delete udp_;
     }
-    udp_ = Esp32WifiBoard::GetInstance().CreateUdp();
+    udp_ = Board::GetInstance().CreateUdp();
     udp_->OnMessage([this](const std::string& data) {
         if (data.size() < sizeof(aes_nonce_)) {
             ESP_LOGE(TAG, "Invalid audio packet size: %zu", data.size());

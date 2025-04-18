@@ -8,6 +8,7 @@ protected:
     bool wifi_config_mode_ = false;
 
     WifiBoard();
+    virtual std::string GetBoardJson() override;
 
 public:
     virtual std::string GetBoardType() override;

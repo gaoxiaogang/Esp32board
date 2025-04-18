@@ -46,16 +46,22 @@ set(LANG_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/assets/lang_config.h")
 file(GLOB LANG_SOUNDS ${CMAKE_CURRENT_SOURCE_DIR}/assets/${LANG_DIR}/*.p3)
 file(GLOB COMMON_SOUNDS ${CMAKE_CURRENT_SOURCE_DIR}/assets/common/*.p3)
 
-if(NOT BOARD_NAME)
-    set(BOARD_NAME "bread-compact-wifi")
-endif()
-
-
 idf_component_register(SRCS ${SOURCES}
         EMBED_FILES ${LANG_SOUNDS} ${COMMON_SOUNDS}
         INCLUDE_DIRS ${INCLUDE_DIRS}
         WHOLE_ARCHIVE         # 强制链接整个库（适用于模板类等场景）
         )
+
+set(BOARD_TYPE "bread-compact-wifi")
+
+if(NOT BOARD_NAME)
+    set(BOARD_NAME ${BOARD_TYPE})
+endif()
+# 1、可以在代码中使用 BOARD_TYPE、BOARD_NAME
+# 2、必须在idf_component_register后使用
+target_compile_definitions(${COMPONENT_LIB}
+                    PRIVATE BOARD_TYPE=\"${BOARD_TYPE}\" BOARD_NAME=\"${BOARD_NAME}\"
+                    )
 
 # 添加生成规则
 add_custom_command(
