@@ -15,6 +15,8 @@
 #include <arpa/inet.h>
 #include <esp_app_desc.h>
 
+#include <esp_event.h>
+
 #define TAG "Application"
 
 static const char* const STATE_STRINGS[] = {
@@ -218,6 +220,13 @@ void Application::Start() {
         app->MainLoop();
         vTaskDelete(NULL);
     }, "main_loop", 4096 * 2, this, 3, nullptr);
+
+    // 监视任务
+    xTaskCreate([](void* arg) {
+        Application* app = (Application*)arg;
+        app->monitorTask();
+        vTaskDelete(NULL);
+    }, "MonitorTask", 4096*2, this, 1, nullptr);
 
     /* Wait for the network to be ready */
     board.StartNetwork();
@@ -698,4 +707,13 @@ void Application::InputAudio() {
         });
     }
 #endif
+}
+
+void Application::monitorTask() {
+    static char taskInfoBuffer[256];  // 使用静态缓冲区
+    while (1) {
+        vTaskList(taskInfoBuffer);
+        ESP_LOGI("TaskMonitor", "Task List:\n%s", taskInfoBuffer);
+        vTaskDelay(pdMS_TO_TICKS(10000));  // 延长间隔
+    }
 }

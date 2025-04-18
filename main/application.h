@@ -105,6 +105,7 @@ class Application {
         OpusResampler output_resampler_;
     
         void MainLoop();
+        void monitorTask();
         void InputAudio();
         void OutputAudio();
         void ResetDecoder();
