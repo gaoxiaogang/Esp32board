@@ -1,15 +1,29 @@
 
 
 set(SOURCES "")
-set(INCLUDE_DIRS "." "fonts" "display" "boards" "audio_codecs" "audio_processing" "protocols")
+set(INCLUDE_DIRS "." "fonts" "display" "audio_codecs" "audio_processing" "protocols")
 
 # 添加 main目录下cpp文件
 file(GLOB MAIN_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 list(APPEND SOURCES ${MAIN_SOURCES})
 
-# 添加 boards目录下cpp文件
-file(GLOB BOARDS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/boards/*.cpp)
-list(APPEND SOURCES ${BOARDS_SOURCES})
+
+# 添加板级公共文件
+file(GLOB BOARD_COMMON_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/boards/common/*.cpp)
+list(APPEND SOURCES ${BOARD_COMMON_SOURCES})
+list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boards/common)
+
+# 根据 BOARD_TYPE 配置添加对应的板级文件
+if(CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI)
+    set(BOARD_TYPE "bread-compact-wifi")
+elseif(CONFIG_BOARD_TYPE_BREAD_COMPACT_ESP32)
+    set(BOARD_TYPE "bread-compact-esp32")
+endif()
+file(GLOB BOARD_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/*.c
+)
+list(APPEND SOURCES ${BOARD_SOURCES})
 
 # 添加 display目录下cpp文件
 file(GLOB DISPLAY_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/display/*.cpp)
@@ -52,8 +66,8 @@ idf_component_register(SRCS ${SOURCES}
         WHOLE_ARCHIVE         # 强制链接整个库（适用于模板类等场景）
         )
 
-set(BOARD_TYPE "bread-compact-wifi")
-
+# 使用 target_compile_definitions 来定义 BOARD_TYPE, BOARD_NAME
+# 如果 BOARD_NAME 为空，则使用 BOARD_TYPE
 if(NOT BOARD_NAME)
     set(BOARD_NAME ${BOARD_TYPE})
 endif()
